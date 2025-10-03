@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="si">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Lakmina Movies - Catalog</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <h1 class="brand">Lakmina Movies</h1>
+      <p class="tag">Lakmina Movies — Movie catalog & info (legal sources only)</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="movie-area">
+      <!-- Movie card(s) will be rendered here by JS -->
+    </section>
+
+    <section class="example-note">
+      <p>Example query usage: <code>?id=tt0075143&amp;t=movies</code></p>
+      <p>මෙය යොදාගෙන demo සඳහා IMDb link එකක් පෙන්වනු ලැබේ — copyrighted material බෙදාහරින links මෙහි නොමැත.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <small>© <span id="year"></span> Lakmina Movies — For legal movie info only</small>
+    </div>
+  </footer>
+
+  <script>
+    // small helper to read query params
+    function getQueryParams() {
+      const params = {};
+      const qs = window.location.search.substring(1);
+      qs.split("&").forEach(pair => {
+        if (!pair) return;
+        const [k, v] = pair.split("=");
+        params[decodeURIComponent(k)] = v ? decodeURIComponent(v) : "";
+      });
+      return params;
+    }
+
+    // render a simple movie card using the `id` param (construct IMDb url)
+    function renderMovieCard(params) {
+      const area = document.getElementById("movie-area");
+      area.innerHTML = "";
+
+      const id = params.id || "";
+      if (!id) {
+        area.innerHTML = `
+          <div class="empty">
+            <h2>No movie selected</h2>
+            <p>Use <code>?id=tt0075143&amp;t=movies</code> (example) to see a demo card.</p>
+          </div>`;
+        return;
+      }
+
+      // Build safe external info URL (IMDb) — this links to IMDb which is a legal info source
+      const imdbUrl = `https://www.imdb.com/title/${encodeURIComponent(id)}/`;
+
+      const card = document.createElement("article");
+      card.className = "movie-card";
+      card.innerHTML = `
+        <div class="poster-placeholder">Poster</div>
+        <div class="movie-content">
+          <h2 class="movie-title">Movie ID: ${escapeHtml(id)}</h2>
+          <p class="movie-desc">This is a demo info card generated from the query string. For official info, click the button below to visit the title page on IMDb.</p>
+          <div class="movie-actions">
+            <a class="btn" href="${imdbUrl}" target="_blank" rel="noopener noreferrer">Open on IMDb</a>
+            <button class="btn secondary" onclick="alert('Add authorized streaming links or trailers here (if available)')">Authorized sources</button>
+          </div>
+        </div>`;
+      area.appendChild(card);
+    }
+
+    // very small helper to avoid injecting uncontrolled HTML
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // Init
+    document.getElementById("year").textContent = new Date().getFullYear();
+    const params = getQueryParams();
+    renderMovieCard(params);
+  </script>
+</body>
+</html>
