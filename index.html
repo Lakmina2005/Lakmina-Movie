@@ -1,36 +1,73 @@
 <!DOCTYPE html>
-<!-- Coding By CodingNepal - www.codingnepalweb.com -->
-<html>
+<html lang="si">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Glassmorphism Login Form | CodingNepal</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lakmina Movie - Login</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
   <div class="wrapper">
-    <form action="#">
-      <h2>Login</h2>
-        <div class="input-field">
-        <input type="text" required>
-        <label>Enter your email</label>
-      </div>
+    <form id="loginForm">
+      <h2>Lakmina Movie - Login</h2>
+
       <div class="input-field">
-        <input type="password" required>
-        <label>Enter your password</label>
+        <input id="email" type="email" required />
+        <label for="email">Enter your email</label>
       </div>
+
+      <div class="input-field">
+        <input id="password" type="password" required />
+        <label for="password">Enter your password</label>
+      </div>
+
       <div class="forget">
         <label for="remember">
-          <input type="checkbox" id="remember">
+          <input type="checkbox" id="remember" />
           <p>Remember me</p>
         </label>
         <a href="#">Forgot password?</a>
       </div>
+
       <button type="submit">Log In</button>
+
       <div class="register">
         <p>Don't have an account? <a href="#">Register</a></p>
       </div>
+
+      <p id="error" class="error" aria-live="polite"></p>
     </form>
   </div>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", function (event) {
+      event.preventDefault(); // default submit නවත්වන්න
+
+      const emailInput = document.getElementById("email");
+      const passwordInput = document.getElementById("password");
+      const errorEl = document.getElementById("error");
+
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
+
+      // email සහ password validate කරන්න
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!re.test(email)) {
+        errorEl.textContent = "වැරදි ඊ-මේල් ආකෘතියක්. කරුණාකර නිවැරදි එකක් ඇතුලත් කරන්න.";
+        return;
+      }
+      if (password === "") {
+        errorEl.textContent = "කරුණාකර මුරපදය ඇතුල් කරන්න.";
+        return;
+      }
+
+      // ✔️ Redirect වෙන පිටුව – මෙතැන "pituvakata.html" කියලා තියෙනවා
+      const targetPage = "pituvakata.html";
+      const encoded = encodeURIComponent(email);
+      window.location.href = `${targetPage}?email=${encoded}`;
+    });
+  </script>
+
 </body>
 </html>
